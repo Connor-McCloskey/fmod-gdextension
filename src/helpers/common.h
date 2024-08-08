@@ -18,7 +18,7 @@
 
 #define MAX_VCA_COUNT 64
 #define MAX_BUS_COUNT 64
-#define MAX_EVENT_DESCRIPTION_COUNT 256
+#define MAX_EVENT_DESCRIPTION_COUNT 3000
 #define MAX_EVENT_INSTANCE_COUNT 128
 
 #define GODOT_LOG_INFO(message) UtilityFunctions::print(message);

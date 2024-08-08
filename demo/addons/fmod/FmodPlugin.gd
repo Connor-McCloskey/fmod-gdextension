@@ -15,6 +15,7 @@ var export_plugin = FmodEditorExportPluginProxy.new()
 var emitter_inspector_plugin = FmodEmitterPropertyInspectorPlugin.new(self)
 var bank_loader_inspector_plugin = FmodBankLoaderPropertyInspectorPlugin.new(self)
 
+var fmod_export_plugin: FmodExportPlugin
 
 func _init():
 	add_autoload_singleton("FmodManager", "res://addons/fmod/FmodManager.gd")
@@ -64,7 +65,9 @@ func _popup_project_explorer(to_display: int, callable: Callable = Callable()):
 
 
 func _enter_tree():
-	add_export_plugin(export_plugin)
+	fmod_export_plugin = FmodExportPlugin.new()
+	# add_export_plugin(export_plugin)
+	add_export_plugin(fmod_export_plugin)
 
 
 func _exit_tree():
@@ -73,4 +76,28 @@ func _exit_tree():
 	
 	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, fmod_button)
 	fmod_button.queue_free()
-	remove_export_plugin(export_plugin)
+	
+	# remove_export_plugin(export_plugin)
+	remove_export_plugin(fmod_export_plugin)
+	fmod_export_plugin = null
+
+
+class FmodExportPlugin extends EditorExportPlugin:
+	var _plugin_name = "FMOD GDExtension"
+	
+	func _supports_platform(platform):
+		if platform is EditorExportPlatformAndroid:
+			return true
+		return false
+	
+	func _get_android_libraries(platform, debug):
+		if debug:
+			# return PackedStringArray(["res://addons/fmod/libs/android/arm64/library-debug.aar"])
+			return PackedStringArray(["res://addons/fmod/library-debug.aar"])
+		else:
+			# return PackedStringArray(["res://addons/fmod/libs/android/arm64/library-release.aar"])
+			return PackedStringArray(["res://addons/fmod/library-release.aar"])
+	
+	func _get_name():
+		return _plugin_name
+	
